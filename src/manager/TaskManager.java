@@ -21,45 +21,67 @@ public class TaskManager {
         return newId++; // Генератор уникальных id
     }
 
+    public void calculateStatus(Epic epic) {
+        if (epic.getSubtasksId().size() == 0) { // Если у эпика нет сабтасков
+            epic.setStatus("NEW"); // Статус эпика  "NEW"
+        } else {
+            for (Integer subtaskId : epic.getSubtasksId()) { // Для каждого id из списка subtasksId
+                Subtask firstSubtask = (Subtask) allTasksById.get(epic.getSubtasksId().get(0));
+                // Достаем из мапы таскменеджера первый сабтаск и приводим его к типу Subtask для работы с полем status
+                Subtask rightSubtask = (Subtask) allTasksById.get(subtaskId);
+                // Достаем из мапы таскменеджера нужный сабтаск и приводим его к типу Subtask для работы с полем status
+                if (rightSubtask.getStatus().equals(firstSubtask.getStatus())) { /* Если статус каждого нового сабтаска
+                равен статусу самого первого сабтаска из списка subtasksId */
+                    epic.setStatus(firstSubtask.getStatus()); // Статус эпика равен статусу его первого сабтаска
+                } else {
+                    epic.setStatus("IN_PROGRESS"); // Иначе статус эпика IN_PROGRESS
+                }
+            }
+        }
+    }
+
     public void addTask(Task task) {
         task.setId(getNewId()); // Присваиваем таску новый id
         allTasksById.put(task.getId(), task); // Кладем новый таск в общую мапу
-        System.out.println(allTasksById);
     }
 
     public void addEpic(Epic epic) {
         epic.setId(getNewId()); // Присваиваем эпику новый id
         allTasksById.put(epic.getId(), epic); // Кладем новый эпик в общую мапу
-        System.out.println(allTasksById);
     }
 
     public void addSubtask(Subtask subtask) {
         subtask.setId(getNewId()); // Присваиваем сабтаску новый id
         Epic rightEpic = (Epic) allTasksById.get(subtask.getEpicId()); // Получаем нужный эпик из мапы
+        if (rightEpic == null) {
+            return;
+        }
         rightEpic.addSubtasksId(subtask.getId()); // Кладем у эпика в список subtasksId id нового сабтаска
         allTasksById.put(subtask.getId(), subtask); // Кладем новый сабтаск в общую мапу
-        rightEpic.calculateStatus(allTasksById); // Пересчитываем статус эпика
-        System.out.println(allTasksById);
+        calculateStatus(rightEpic); // Пересчитываем статус эпика
     }
 
     public void updateTask(Task task) {
         allTasksById.put(task.getId(), task); // Кладем обновленный таск в мапу по индексу
-        System.out.println(allTasksById);
     }
 
     public void updateEpic(Epic epic) {
         Epic oldEpic = (Epic) allTasksById.get(epic.getId()); // Достаем старый эпик из мапы и приводим к классу Epic
+        if (oldEpic == null) {
+            return;
+        }
         epic.setSubtasksId(oldEpic.getSubtasksId()); // Перекладываем список subtasksId из старого эпика в обновленный
         epic.setStatus(oldEpic.getStatus()); // Перекладываем статус из старого эпика в обновленный
         allTasksById.put(epic.getId(), epic); // Кладем обновленный эпик в мапу по индексу
-        System.out.println(allTasksById);
     }
 
     public void updateSubtask(Subtask subtask) {
         allTasksById.put(subtask.getId(), subtask); // Кладем обновленный сабтаск в мапу по индексу
         Epic epic = (Epic) allTasksById.get(subtask.getEpicId()); // Получаем нужный эпик из мапы
-        epic.calculateStatus(allTasksById); // Пересчитываем статус эпика
-        System.out.println(allTasksById);
+        if (epic == null) {
+            return;
+        }
+        calculateStatus(epic); // Пересчитываем статус эпика
     }
 
     public Task getTaskById(Integer id) {
@@ -76,24 +98,28 @@ public class TaskManager {
 
     public void deleteTaskById(Integer id) {
         allTasksById.remove(id); // Удаляет таск по id
-        System.out.println(allTasksById);
     }
 
     public void deleteEpicById(Integer id) {
         Epic epic = (Epic) allTasksById.get(id); // Получаем эпик по id
+        if (epic == null) {
+            return;
+        }
         for (Integer subtaskId : epic.getSubtasksId()) { // Для каждого id из списка subtasksId нашего эпика
             allTasksById.remove(subtaskId); // Удаляем сабтаск по id из общей мапы
         } // Удалили все сабтаски эпика
         allTasksById.remove(id); // Теперь удаляем сам эпик
-        System.out.println(allTasksById);
     }
 
     public void deleteSubtaskById(Integer id) {
         Subtask subtask = (Subtask) allTasksById.get(id); // Получаем сабтаск по id
+        if (subtask == null) {
+            return;
+        } // Если же такой subtask != null, то эпик точно != null (иначе мы не смогли бы добавить этот сабтаск ранее)
         Epic epic = (Epic) allTasksById.get(subtask.getEpicId()); // Получаем эпик, к которому относится сабтаск
         epic.getSubtasksId().remove(id); // Удаляем id сабтаска из списка subtasksId эпика
         allTasksById.remove(id); // Удаляем сабтаск по id из общей мапы
-        System.out.println(allTasksById);
+        calculateStatus(epic); // Пересчитываем статус эпика
     }
 
     public ArrayList<Task> getListOfAllTasks() {
@@ -131,7 +157,6 @@ public class TaskManager {
         for (Task task : listOfAllTasks) { // Для каждого таска из списка
             allTasksById.remove(task.getId()); // Берем id таска и удаляем его из общей мапы
         }
-        System.out.println(allTasksById);
     }
 
     public void removeAllEpics() {
@@ -140,7 +165,6 @@ public class TaskManager {
         for (Epic epic : listOfAllEpics) { // Для каждого эпика из списка
             allTasksById.remove(epic.getId()); // Берем id эпика и удаляем его из общей мапы
         }
-        System.out.println(allTasksById);
     }
 
     public void removeAllSubtasks() {
@@ -148,7 +172,10 @@ public class TaskManager {
         for (Subtask subtask : listOfAllSubtasks) { // Для каждого сабтаска из списка
             allTasksById.remove(subtask.getId()); // Берем id сабтаска и удаляем его из общей мапы
         }
-        System.out.println(allTasksById);
+        ArrayList<Epic> listOfAllEpics = getListOfAllEpics(); // Получили список всех эпиков
+        for (Epic epic : listOfAllEpics) { // Для каждого эпика из списка
+            epic.getSubtasksId().clear(); // Удалили все id из списка subtasksId
+        } // Теперь все эпики без информации и сабтасках
     }
 
     public ArrayList<Subtask> getListOfEpicsSubtasks(Integer id) {

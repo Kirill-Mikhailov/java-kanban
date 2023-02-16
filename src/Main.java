@@ -13,7 +13,7 @@ public class Main {
         taskManager.addSubtask(new Subtask("Сабтаск 1", "Описание сабтаска 1", "NEW", 1)); // Создаем сабтаск 1 эпика 1
         taskManager.addSubtask(new Subtask("Сабтаск 2", "Описание сабтакса 2", "IN_PROGRESS", 1)); // Создаем сабтаск 2 эпика 1
         taskManager.updateTask(new Task(0, "Обновленная адача 1", "Обновленное описание задачи 1", "DONE")); // Обновляем таск 1
-        taskManager.updateEpic(new Epic(1, "Обновленный эпик 1", "Обновленное описание эпика 1")); // Обновляем эпик 1
+        taskManager.updateEpic(new Epic(6, "Обновленный эпик 1", "Обновленное описание эпика 1")); // Обновляем эпик 1
         taskManager.updateSubtask(new Subtask(2, "Обновленный сабтаск 1", "Обновленное описание сабтаска 1", "DONE", 1)); // Обновляем сабтаск 1
         taskManager.updateSubtask(new Subtask(3, "Обновленный сабтаск 2", "Обновленное описание сабтаска 2", "DONE", 1)); // Обновляем сабтаск 2
 
@@ -29,6 +29,7 @@ public class Main {
         System.out.println(taskManager.getListOfAllSubtasks());
         System.out.println(taskManager.getListOfEpicsSubtasks(1));
 
+        taskManager.removeAllSubtasks();
         taskManager.removeAllTasks();
         taskManager.removeAllEpics();
 
