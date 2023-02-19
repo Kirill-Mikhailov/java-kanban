@@ -1,25 +1,42 @@
 package tasks;
 
-public class Task extends BaseTask{
-    private String status;
+public abstract class Task {
+    private Integer id;
+    private final String title;
+    private final String description;
 
-    public Task(String title, String description, String status) {
-        super(title, description);
-        this.status = status;
+    public Task(String title, String description) {
+        this.title = title;
+        this.description = description;
     }
 
-    public Task(int id, String title, String description, String status) {
-        super(id, title, description);
-        this.status = status;
+    public Task(Integer id, String title, String description) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
     }
 
-    public String getStatus() {
-        return status;
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     @Override
     public String toString() {
-        return  super.toString() +
-                "status='" + status + "'}";
+        return getClass() + "{" +
+                "id='" + this.getId() + '\'' +
+                "title='" + this.getTitle() + '\'' +
+                "description='" + this.getDescription() + '\'';
     }
 }

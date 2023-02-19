@@ -2,22 +2,22 @@ package tasks;
 
 import java.util.ArrayList;
 
-public class Epic extends BaseTask {
-    private String status;
+public class Epic extends Task {
+    private Status status;
     private ArrayList<Integer> subtasksId;
 
     public Epic(String title, String description) {
         super(title, description);
         this.subtasksId = new ArrayList<>();
-        this.status = "NEW";
+        this.status = Status.NEW;
     }
 
     public Epic(Integer id, String title, String description) {
         super(id, title, description);
-        this.subtasksId = new ArrayList<>(); // Неверно
+        this.subtasksId = new ArrayList<>();
     }
 
-    public void addSubtasksId (Integer id) {
+    public void addSubtasksId(Integer id) {
         subtasksId.add(id);
     }
 
@@ -29,11 +29,11 @@ public class Epic extends BaseTask {
         this.subtasksId = subtasksId;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
