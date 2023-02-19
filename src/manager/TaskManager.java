@@ -3,11 +3,8 @@ package manager;
 import tasks.Epic;
 import tasks.SingleTask;
 import tasks.Subtask;
-import tasks.Task;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public interface TaskManager {
 
