@@ -41,6 +41,7 @@ public class Main {
         System.out.println(inMemoryTaskManager.getListOfAllEpics());
         System.out.println(inMemoryTaskManager.getListOfAllSubtasks());
         System.out.println(inMemoryTaskManager.getListOfEpicsSubtasks(3));
+        System.out.println(inMemoryTaskManager.getHistory());
         inMemoryTaskManager.removeAllSubtasks();
         inMemoryTaskManager.removeAllTasks();
         inMemoryTaskManager.removeAllEpics();

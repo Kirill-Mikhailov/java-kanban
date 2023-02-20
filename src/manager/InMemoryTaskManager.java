@@ -4,20 +4,26 @@ import tasks.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private Integer newId;
     private final HashMap<Integer, Task> allTasksById;
     private final HistoryManager inMemoryHistoryManager;
 
-    public InMemoryTaskManager(HistoryManager inMemoryHistoryManager) {
+    public InMemoryTaskManager() {
         this.allTasksById = new HashMap<>();
         this.newId = 0;
-        this.inMemoryHistoryManager = inMemoryHistoryManager;
+        this.inMemoryHistoryManager = Managers.getDefaultHistory();
     }
 
     private Integer getNewId() {
         return newId++; // Генератор уникальных id
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        return inMemoryHistoryManager.getHistory();
     }
 
     @Override
