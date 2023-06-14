@@ -88,11 +88,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void updateSubtask(Subtask subtask) {
-        allTasksById.put(subtask.getId(), subtask); // Кладем обновленный сабтаск в мапу по индексу
         Epic epic = (Epic) allTasksById.get(subtask.getEpicId()); // Получаем нужный эпик из мапы
         if (epic == null) {
             return;
         }
+        allTasksById.put(subtask.getId(), subtask); // Кладем обновленный сабтаск в мапу по индексу
         calculateStatus(epic); // Пересчитываем статус эпика
     }
 
@@ -117,6 +117,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteSingleTaskById(Integer id) {
         allTasksById.remove(id); // Удаляет таск по id
+        inMemoryHistoryManager.remove(id); // Удаляем из истории просмотров
     }
 
     @Override
@@ -127,8 +128,10 @@ public class InMemoryTaskManager implements TaskManager {
         }
         for (Integer subtaskId : epic.getSubtasksId()) { // Для каждого id из списка subtasksId нашего эпика
             allTasksById.remove(subtaskId); // Удаляем сабтаск по id из общей мапы
+            inMemoryHistoryManager.remove(subtaskId); // Удаляем сабтаск из истории просмотров
         } // Удалили все сабтаски эпика
         allTasksById.remove(id); // Теперь удаляем сам эпик
+        inMemoryHistoryManager.remove(id); // Удаляем эпик из истории просмотров
     }
 
     @Override
@@ -141,6 +144,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.getSubtasksId().remove(id); // Удаляем id сабтаска из списка subtasksId эпика
         allTasksById.remove(id); // Удаляем сабтаск по id из общей мапы
         calculateStatus(epic); // Пересчитываем статус эпика
+        inMemoryHistoryManager.remove(id); // Удаляем из истории просмотров
     }
 
     @Override
@@ -149,6 +153,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Task task : allTasksById.values()) { // Для каждого элемента мапы со всеми задачами
             if (task.getClass().getSimpleName().equals("SingleTask")) { // Если класс задачи совпал с искомым
                 listOfAllSingleTasks.add((SingleTask) task); // Добавляем в список таск
+                inMemoryHistoryManager.add(task); // Добавляем таск в список просмотров (ведь он тоже просматривается)
             }
         }
         return listOfAllSingleTasks;
@@ -160,6 +165,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Task task : allTasksById.values()) { // Для каждого элемента мапы со всеми задачами
             if (task.getClass().getSimpleName().equals("Epic")) { // Если класс задачи совпал с искомым
                 listOfAllEpics.add((Epic) task); // Добавляем в список эпик
+                inMemoryHistoryManager.add(task); // Добавляем таск в список просмотров (ведь он тоже просматривается)
             }
         }
         return listOfAllEpics;
@@ -171,6 +177,7 @@ public class InMemoryTaskManager implements TaskManager {
         for (Task task : allTasksById.values()) { // Для каждого элемента мапы со всеми задачами
             if (task.getClass().getSimpleName().equals("Subtask")) { // Если класс задачи совпал с искомым
                 listOfAllSubtasks.add((Subtask) task);
+                inMemoryHistoryManager.add(task); // Добавляем таск в список просмотров (ведь он тоже просматривается)
             }
         }
         return listOfAllSubtasks;
@@ -181,6 +188,7 @@ public class InMemoryTaskManager implements TaskManager {
         ArrayList<SingleTask> listOfAllSingleTasks = getListOfAllSingleTasks(); // Получили список тасков
         for (SingleTask singleTask : listOfAllSingleTasks) { // Для каждого таска из списка
             allTasksById.remove(singleTask.getId()); // Берем id таска и удаляем его из общей мапы
+            inMemoryHistoryManager.remove(singleTask.getId()); // Удаляем из истории просмотров
         }
     }
 
@@ -190,6 +198,7 @@ public class InMemoryTaskManager implements TaskManager {
         ArrayList<Epic> listOfAllEpics = getListOfAllEpics(); // Получили список эпиков
         for (Epic epic : listOfAllEpics) { // Для каждого эпика из списка
             allTasksById.remove(epic.getId()); // Берем id эпика и удаляем его из общей мапы
+            inMemoryHistoryManager.remove(epic.getId()); // Удаляем из истории просмотров
         }
     }
 
@@ -198,6 +207,7 @@ public class InMemoryTaskManager implements TaskManager {
         ArrayList<Subtask> listOfAllSubtasks = getListOfAllSubtasks(); // Получили список сабтасков
         for (Subtask subtask : listOfAllSubtasks) { // Для каждого сабтаска из списка
             allTasksById.remove(subtask.getId()); // Берем id сабтаска и удаляем его из общей мапы
+            inMemoryHistoryManager.remove(subtask.getId()); // Удаляем из истории просмотров
         }
         ArrayList<Epic> listOfAllEpics = getListOfAllEpics(); // Получили список всех эпиков
         for (Epic epic : listOfAllEpics) { // Для каждого эпика из списка
@@ -211,6 +221,8 @@ public class InMemoryTaskManager implements TaskManager {
         Epic epic = (Epic) allTasksById.get(id); // Получили доступ к полям эпика
         for (Integer subtaskId : epic.getSubtasksId()) { // Для каждого id из списка subtasksId эпика
             listOfEpicsSubtasks.add((Subtask) allTasksById.get(subtaskId)); // Берем сабтаск из мапы и кладем в список
+            inMemoryHistoryManager.add(allTasksById.get(subtaskId)); /* Добавляем таск в список просмотров
+            (ведь он тоже просматривается) */
         }
         return listOfEpicsSubtasks;
     }
