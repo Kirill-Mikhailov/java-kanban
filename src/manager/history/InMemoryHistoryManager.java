@@ -1,19 +1,16 @@
-package manager;
+package manager.history;
 
 import tasks.Task;
 
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    public Node head;
-    public Node tail;
+    private Node head;
+    private Node tail;
     private int size;
     private final Map<Integer, Node> idToNode;
 
     public InMemoryHistoryManager() {
-        this.head = null;
-        this.tail = null;
-        this.size = 0;
         this.idToNode = new HashMap<>();
     }
 
@@ -72,19 +69,25 @@ public class InMemoryHistoryManager implements HistoryManager {
     public List<Task> getHistory() {
         List<Task> history = new ArrayList<>();
         Node node = head;
-        if (head != null) { //Если список не пустой
-            //if (size > 1) { //И если в списке более 1 элемента
+        if (head != null) {
             while (node.next != null) {
                 history.add(node.data);
                 node = node.next;
             }
             history.add(node.data);
         }
-            //} else {
-                //history.add(node.data);
-            //}
-        //}
-
         return Collections.unmodifiableList(history);
+    }
+
+    private static final class Node {
+        public Task data;
+        public Node next;
+        public Node prev;
+
+        public Node(Task data) {
+            this.data = data;
+            this.next = null;
+            this.prev = null;
+        }
     }
 }
