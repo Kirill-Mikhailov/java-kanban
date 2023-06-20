@@ -68,13 +68,13 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public List<Task> getHistory() {
         List<Task> history = new ArrayList<>();
-        Node node = head;
-        if (head != null) {
-            while (node.next != null) {
-                history.add(node.data);
-                node = node.next;
+        Node node = head; //Начинаем с головы
+        if (head != null) { //Если список не пустой
+            while (node.next != null) { //Пока не дошли до последней ноды
+                history.add(node.data); //Добавили задачу в список
+                node = node.next; //Перешли на следующую ноду
             }
-            history.add(node.data);
+            history.add(node.data); //Добавили последнюю ноду
         }
         return Collections.unmodifiableList(history);
     }

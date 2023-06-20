@@ -1,5 +1,7 @@
-package manager;
+package manager.oldTaskManager;
 
+import manager.Managers;
+import manager.history.HistoryManager;
 import tasks.*;
 
 import java.util.ArrayList;
@@ -8,8 +10,8 @@ import java.util.List;
 
 public class InMemoryTaskManager implements TaskManager {
     private Integer newId;
-    private final HashMap<Integer, Task> allTasksById;
-    private final HistoryManager inMemoryHistoryManager;
+    protected final HashMap<Integer, Task> allTasksById;
+    protected final HistoryManager inMemoryHistoryManager;
 
     public InMemoryTaskManager() {
         this.allTasksById = new HashMap<>();
@@ -60,11 +62,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void addSubtask(Subtask subtask) {
-        subtask.setId(getNewId()); // Присваиваем сабтаску новый id
         Epic rightEpic = (Epic) allTasksById.get(subtask.getEpicId()); // Получаем нужный эпик из мапы
         if (rightEpic == null) {
             return;
         }
+        subtask.setId(getNewId()); // Присваиваем сабтаску новый id
         rightEpic.addSubtasksId(subtask.getId()); // Кладем у эпика в список subtasksId id нового сабтаска
         allTasksById.put(subtask.getId(), subtask); // Кладем новый сабтаск в общую мапу
         calculateStatus(rightEpic); // Пересчитываем статус эпика

@@ -1,7 +1,5 @@
 package tasks;
 
-import java.util.Objects;
-
 public class SingleTask extends Task {
     private final Status status;
 
