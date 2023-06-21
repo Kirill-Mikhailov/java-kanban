@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    Path autoSaveFile;
+    private Path autoSaveFile;
     public FileBackedTasksManager(Path autoSaveFile) {
         this.autoSaveFile = autoSaveFile;
     }
