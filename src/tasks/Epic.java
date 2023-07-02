@@ -1,28 +1,27 @@
 package tasks;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class Epic extends Task {
-    private Status status;
     private ArrayList<Integer> subtasksId;
+    private LocalDateTime endTime;
 
     public Epic(String title, String description) {
-        super(title, description);
+        super(title, description, Status.NEW);
         this.subtasksId = new ArrayList<>();
-        this.status = Status.NEW;
-    }
+    } // Конструктор для добавления эпика
 
     public Epic(Integer id, String title, String description) {
-        super(id, title, description);
+        super(id, title, description, Status.NEW);
         this.subtasksId = new ArrayList<>();
-    }
+    }  // Конструктор для изменения эпика
 
     public Epic(Integer id, String title, String description, Status status) {
-        super(id, title, description);
-        this.status = status;
+        super(id, title, description, status);
         this.subtasksId = new ArrayList<>();
-    }
+    } // Конструктор для загрузки эпика из файла
 
     public void addSubtasksId(Integer id) {
         subtasksId.add(id);
@@ -36,18 +35,32 @@ public class Epic extends Task {
         this.subtasksId = subtasksId;
     }
 
-    public Status getStatus() {
-        return status;
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     @Override
     public String toString() {
         return super.toString() +
-                "status='" + status + '\'' +
                 "subtasksId=" + subtasksId + "}";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Epic epic = (Epic) o;
+        return Objects.equals(subtasksId, epic.subtasksId) && Objects.equals(endTime, epic.endTime);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), subtasksId, endTime);
     }
 }

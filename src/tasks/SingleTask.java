@@ -1,25 +1,19 @@
 package tasks;
 
+import java.time.LocalDateTime;
+
 public class SingleTask extends Task {
-    private final Status status;
 
-    public SingleTask(String title, String description, Status status) {
-        super(title, description);
-        this.status = status;
+    public SingleTask(String title, String description, Status status, LocalDateTime startTime, int duration) {
+        super(title, description, status, startTime, duration);
     }
 
-    public SingleTask(int id, String title, String description, Status status) {
-        super(id, title, description);
-        this.status = status;
-    }
-
-    public Status getStatus() {
-        return status;
+    public SingleTask(Integer id, String title, String description, Status status, LocalDateTime startTime, int duration) {
+        super(id, title, description, status, startTime, duration);
     }
 
     @Override
     public String toString() {
-        return super.toString() +
-                "status='" + status + "'}";
+        return super.toString() + "}";
     }
 }

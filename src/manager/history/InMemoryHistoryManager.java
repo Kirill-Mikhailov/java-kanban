@@ -16,11 +16,9 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
-        if (task != null) {
-            remove(task.getId()); //Удалили старый узел из списка по id (если он там есть)
-            idToNode.put(task.getId(), linkLast(new Node(task))); /* Создали новый узел из задачи и передали в метод
-            для добавления узла в список. Положили в мапу этот узел с новой задачей */
-        }
+        remove(task.getId()); //Удалили старый узел из списка по id (если он там есть)
+        idToNode.put(task.getId(), linkLast(new Node(task))); /* Создали новый узел из задачи и передали в метод
+                                        для добавления узла в список. Положили в мапу этот узел с новой задачей */
     }
 
     @Override
@@ -47,7 +45,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (size == 1) { //Если это и голова и хвост
             head = null; //Удаляем из полей, ссылок внутри node и так нет
             tail = null;
-
         } else if (node.prev == null){ //Если удаляется голова
             Node nextNode = node.next; //Сохранили следующий узел
             nextNode.prev = null; //Удалили у следующего узла ссылку на текущий
@@ -89,5 +86,31 @@ public class InMemoryHistoryManager implements HistoryManager {
             this.next = null;
             this.prev = null;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Node node = (Node) o;
+            return Objects.equals(data, node.data);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(data);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InMemoryHistoryManager that = (InMemoryHistoryManager) o;
+        return size == that.size && Objects.equals(head, that.head) && Objects.equals(tail, that.tail) && Objects.equals(idToNode, that.idToNode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(head, tail, size, idToNode);
     }
 }

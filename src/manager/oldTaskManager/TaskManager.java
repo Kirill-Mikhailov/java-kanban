@@ -14,6 +14,8 @@ public interface TaskManager {
 
     void calculateStatus(Epic epic);
 
+    void calculateDateAndDuration(Epic epic);
+
     void addSingleTask(SingleTask singleTask);
 
     void addEpic(Epic epic);
@@ -51,4 +53,8 @@ public interface TaskManager {
     void removeAllSubtasks();
 
     ArrayList<Subtask> getListOfEpicsSubtasks(Integer id);
+
+    List<Task> getPrioritizedTasks();
+
+    void timeValidation(SingleTask task);
 }
