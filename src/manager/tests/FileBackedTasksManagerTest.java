@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 
 public class FileBackedTasksManagerTest extends TaskManagerTest<TaskManager> {
-    Path autoSaveFile = Path.of("C:\\Users\\Кирилл\\Desktop\\kanban.csv");
+    Path autoSaveFile = Paths.get("..\\kanban.csv");
 
     @BeforeEach
     void beforeEach() {
@@ -47,7 +47,7 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<TaskManager> {
     @Test
     void loadFromFileWithEmptyListOfTasks() { // Проверка сохранения и восстановления с пустым списком подзадач
         FileBackedTasksManager loadedManager = FileBackedTasksManager.loadFromFile(
-                Paths.get("C:\\Users\\Кирилл\\Desktop\\kanban.csv"));
+               autoSaveFile);
         assertEquals(this.manager, loadedManager, "Менеджеры не совпадают");
     }
 
@@ -56,7 +56,7 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<TaskManager> {
         manager.addEpic(epic1);
 
         FileBackedTasksManager loadedManager = FileBackedTasksManager.loadFromFile(
-                Paths.get("C:\\Users\\Кирилл\\Desktop\\kanban.csv"));
+               autoSaveFile);
         assertEquals(this.manager, loadedManager, "Менеджеры не совпадают");
     }
 
@@ -75,7 +75,7 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<TaskManager> {
         manager.deleteEpicById(epic2.getId());
 
         FileBackedTasksManager loadedManager = FileBackedTasksManager.loadFromFile(
-                Paths.get("C:\\Users\\Кирилл\\Desktop\\kanban.csv"));
+                autoSaveFile);
         assertEquals(this.manager, loadedManager, "Менеджеры не совпадают");
     }
 
@@ -103,7 +103,7 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<TaskManager> {
         manager.deleteSubtaskById(subtask2.getId());
 
         FileBackedTasksManager loadedManager = FileBackedTasksManager.loadFromFile(
-                Paths.get("C:\\Users\\Кирилл\\Desktop\\kanban.csv"));
+                autoSaveFile);
         assertEquals(this.manager, loadedManager, "Менеджеры не совпадают");
     }
 }
