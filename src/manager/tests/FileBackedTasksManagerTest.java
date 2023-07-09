@@ -1,6 +1,6 @@
 package manager.tests;
 
-import manager.FileBackedTasksManager;
+import manager.oldTaskManager.FileBackedTasksManager;
 import manager.Managers;
 import manager.exceptions.ManagerSaveException;
 import manager.oldTaskManager.TaskManager;
@@ -17,7 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.Collections;
 
 public class FileBackedTasksManagerTest extends TaskManagerTest<TaskManager> {
     Path autoSaveFile = Paths.get("..\\kanban.csv");

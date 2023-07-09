@@ -1,13 +1,11 @@
-package manager;
+package manager.oldTaskManager;
 
+import manager.Managers;
 import manager.exceptions.ManagerSaveException;
-import manager.oldTaskManager.InMemoryTaskManager;
 import tasks.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -15,7 +13,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private final Path autoSaveFile;
