@@ -487,7 +487,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
         manager.addSubtask(subtask1);
 
         SingleTask invalidTask = new SingleTask("titleT", "descriptionT", Status.NEW, // Пересекается
-                LocalDateTime.of(2023, 7, 3, 14, 30), 240); // с subtask1
+                LocalDateTime.of(2023, 7, 3, 14, 0), 240); // с subtask1
 
         Subtask invalidSubtask = new Subtask("titleS", "descriptionS", Status.NEW, 0, //Пересекается
                 LocalDateTime.of(2023, 7, 1, 13, 30), 240); // с task1

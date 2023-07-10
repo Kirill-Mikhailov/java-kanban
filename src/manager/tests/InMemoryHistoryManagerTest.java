@@ -1,6 +1,6 @@
 package manager.tests;
 
-import manager.Managers;
+import manager.utils.Managers;
 import manager.history.HistoryManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

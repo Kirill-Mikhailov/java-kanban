@@ -10,12 +10,14 @@ public class Subtask extends SingleTask {
                    LocalDateTime startTime, int duration) {
         super(title, description, status, startTime, duration);
         this.epicId = epicId;
+        this.type = TaskType.SUBTASK;
     }
 
     public Subtask(Integer id, String title, String description, Status status, Integer epicId,
                    LocalDateTime startTime, int duration) {
         super(id, title, description, status, startTime, duration);
         this.epicId = epicId;
+        this.type = TaskType.SUBTASK;
     }
 
     public Integer getEpicId() {

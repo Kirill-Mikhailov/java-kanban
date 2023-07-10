@@ -1,6 +1,6 @@
 package manager.oldTaskManager;
 
-import manager.Managers;
+import manager.utils.Managers;
 import manager.exceptions.TaskManagerException;
 import manager.history.HistoryManager;
 import tasks.*;
@@ -9,9 +9,9 @@ import java.time.Duration;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private Integer newId;
-    protected final HashMap<Integer, Task> allTasksById;
-    protected final HistoryManager inMemoryHistoryManager;
+    protected Integer newId;
+    protected HashMap<Integer, Task> allTasksById;
+    protected HistoryManager inMemoryHistoryManager;
     protected TreeSet<Task> prioritizedTasks;
 
     public InMemoryTaskManager() {

@@ -5,12 +5,17 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public abstract class Task {
+    protected TaskType type;
     private Integer id;
-    private final String title;
-    private final String description;
+    private String title;
+    private String description;
     private Status status;
     private LocalDateTime startTime;
     private Duration duration;
+
+    public Task() {
+        this.status = Status.NEW;
+    } // Для эпика (десериализация)
 
     public Task(String title, String description, Status status) {
         this.title = title;

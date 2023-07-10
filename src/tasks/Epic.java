@@ -8,19 +8,28 @@ public class Epic extends Task {
     private ArrayList<Integer> subtasksId;
     private LocalDateTime endTime;
 
+    public Epic() {
+        super();
+        this.subtasksId = new ArrayList<>();
+        this.type = TaskType.EPIC;
+    }
+
     public Epic(String title, String description) {
         super(title, description, Status.NEW);
         this.subtasksId = new ArrayList<>();
+        this.type = TaskType.EPIC;
     } // Конструктор для добавления эпика
 
     public Epic(Integer id, String title, String description) {
         super(id, title, description, Status.NEW);
         this.subtasksId = new ArrayList<>();
+        this.type = TaskType.EPIC;
     }  // Конструктор для изменения эпика
 
     public Epic(Integer id, String title, String description, Status status) {
         super(id, title, description, status);
         this.subtasksId = new ArrayList<>();
+        this.type = TaskType.EPIC;
     } // Конструктор для загрузки эпика из файла
 
     public void addSubtasksId(Integer id) {

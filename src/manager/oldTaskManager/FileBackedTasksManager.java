@@ -1,6 +1,7 @@
 package manager.oldTaskManager;
 
-import manager.Managers;
+import manager.utils.LocalDateTimeAdapter;
+import manager.utils.Managers;
 import manager.exceptions.ManagerSaveException;
 import tasks.*;
 
@@ -15,10 +16,13 @@ import java.util.Collections;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private final Path autoSaveFile;
-    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy|HH:mm");
+    transient private Path autoSaveFile;
+
     public FileBackedTasksManager(Path autoSaveFile) {
         this.autoSaveFile = autoSaveFile;
+    }
+
+    public FileBackedTasksManager() {
     }
 
     @Override
@@ -149,7 +153,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return prioritizedTasks;
     }
 
-    private void save() throws ManagerSaveException {
+    protected void save() throws ManagerSaveException {
         List<String> lines = new ArrayList<>(List.of("id,type,name,status,description,startTime,duration,epic")); //Создали шапку
         if (!allTasksById.isEmpty()) {
             for (int i = 0; i <= Collections.max(allTasksById.keySet()); i++) {
@@ -171,19 +175,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         if (task.getClass().getSimpleName().equals("SingleTask")) {
             return String.format("%d,%s,%s,%s,%s,%s,%s", task.getId(), TaskType.TASK.name(), task.getTitle(),
                     ((SingleTask) task).getStatus().name(), task.getDescription(),
-                    task.getStartTime().format(formatter), task.getDuration().toMinutes());
+                    task.getStartTime().format(LocalDateTimeAdapter.FORMATTER), task.getDuration().toMinutes());
         } else if (task.getClass().getSimpleName().equals("Epic")) {
             if (task.getStartTime() == null) { // Если у эпика пустые поля времени (== нет сабтасков)
                 return String.format("%d,%s,%s,%s,%s,%s,%s", task.getId(), TaskType.EPIC.name(), task.getTitle(),
-                        ((Epic) task).getStatus().name(), task.getDescription(), null, null); //Записываем null
+                        Status.NEW.name(), task.getDescription(), null, null); //Записываем null
             } else {
                 return String.format("%d,%s,%s,%s,%s,%s,%s", task.getId(), TaskType.EPIC.name(), task.getTitle(),
                         ((Epic) task).getStatus().name(), task.getDescription(),
-                        task.getStartTime().format(formatter), task.getDuration().toMinutes());
+                        task.getStartTime().format(LocalDateTimeAdapter.FORMATTER), task.getDuration().toMinutes());
             }
         } else {
             return String.format("%d,%s,%s,%s,%s,%s,%s,%d", task.getId(), TaskType.SUBTASK.name(), task.getTitle(),
-                    ((Subtask) task).getStatus().name(), task.getDescription(), task.getStartTime().format(formatter),
+                    ((Subtask) task).getStatus().name(), task.getDescription(),
+                    task.getStartTime().format(LocalDateTimeAdapter.FORMATTER),
                     task.getDuration().toMinutes(), ((Subtask) task).getEpicId());
         }
     }
@@ -232,7 +237,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         String[] taskElements = taskLine.split(",");
         if (taskElements[1].equals(TaskType.TASK.name())) { //Если это обычная таска
             return new SingleTask(Integer.parseInt(taskElements[0]), taskElements[2], taskElements[4],
-                    Status.valueOf(taskElements[3]), LocalDateTime.parse(taskElements[5], formatter),
+                    Status.valueOf(taskElements[3]), LocalDateTime.parse(taskElements[5], LocalDateTimeAdapter.FORMATTER),
                     Integer.parseInt(taskElements[6])); //Вернули SingleTask
         } else if (taskElements[1].equals(TaskType.EPIC.name())) { //Если это эпик
             return new Epic(Integer.parseInt(taskElements[0]), taskElements[2], taskElements[4],
@@ -240,7 +245,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         } else { //Если сабтаск
             return new Subtask(Integer.parseInt(taskElements[0]), taskElements[2], taskElements[4],
                     Status.valueOf(taskElements[3]), Integer.parseInt(taskElements[7]),
-                    LocalDateTime.parse(taskElements[5], formatter), Integer.parseInt(taskElements[6])); //Subtask
+                    LocalDateTime.parse(taskElements[5], LocalDateTimeAdapter.FORMATTER), Integer.parseInt(taskElements[6])); //Subtask
         }
     }
 
@@ -255,8 +260,5 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         } else {
             return Collections.emptyList();
         }
-    }
-
-    public static void main(String[] args) {
     }
 }

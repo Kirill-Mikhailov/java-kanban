@@ -78,8 +78,8 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     private static final class Node {
         public Task data;
-        public Node next;
-        public Node prev;
+        transient public Node next;
+        transient public Node prev;
 
         public Node(Task data) {
             this.data = data;
